@@ -1,0 +1,249 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#7b5cff">
+  <meta name="description" content="A tiny, delightfully useless PrizePass Easter egg.">
+  <title>PrizePass Lucky Egg</title>
+  <style>
+    :root {
+      --ink: #1a1a1a;
+      --red: #e63946;
+      --red-dark: #bd2230;
+      --red-soft: #f7b8be;
+      --paper: #f8f7f6;
+      --line: #e0dddb;
+      --muted: #6b6b6b;
+      --card: rgba(255,255,255,.94);
+    }
+    * { box-sizing: border-box; }
+    html, body { min-height: 100%; }
+    body {
+      margin: 0;
+      color: var(--ink);
+      font-family: ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif;
+      background:
+        radial-gradient(circle at 18% 18%, rgba(255,255,255,.96) 0 4%, transparent 20%),
+        radial-gradient(circle at 80% 22%, rgba(230,57,70,.13), transparent 28%),
+        radial-gradient(circle at 50% 90%, rgba(26,26,26,.06), transparent 30%),
+        linear-gradient(145deg, #ffffff, var(--paper) 52%, #f7e9ea);
+      overflow: hidden;
+    }
+    .sparkles, .confetti { position: fixed; inset: 0; pointer-events: none; }
+    .sparkles span {
+      position: absolute;
+      font-size: clamp(18px, 3vw, 32px);
+      animation: float 5s ease-in-out infinite;
+      opacity: .75;
+    }
+    .sparkles span:nth-child(1) { left: 8%; top: 15%; }
+    .sparkles span:nth-child(2) { right: 10%; top: 13%; animation-delay: -1s; }
+    .sparkles span:nth-child(3) { left: 13%; bottom: 15%; animation-delay: -2s; }
+    .sparkles span:nth-child(4) { right: 15%; bottom: 17%; animation-delay: -3s; }
+    main {
+      min-height: 100svh;
+      display: grid;
+      place-items: center;
+      padding: 24px;
+      position: relative;
+    }
+    .card {
+      width: min(620px, 100%);
+      min-height: 650px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: clamp(28px, 6vw, 54px);
+      background: var(--card);
+      border: 3px solid rgba(255,255,255,.9);
+      border-radius: 42px;
+      box-shadow: 0 28px 80px rgba(26,26,26,.14), inset 0 1px 0 white;
+      backdrop-filter: blur(14px);
+      position: relative;
+    }
+    .card::before, .card::after {
+      content: "";
+      position: absolute;
+      top: 72%;
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: var(--paper);
+      box-shadow: inset 0 0 0 2px var(--line);
+    }
+    .card::before { left: -18px; }
+    .card::after { right: -18px; }
+    }
+    .eyebrow {
+      margin: 0 0 14px;
+      color: var(--red);
+      font-size: 13px;
+      font-weight: 900;
+      letter-spacing: .16em;
+      text-transform: uppercase;
+    }
+    h1 {
+      max-width: 510px;
+      margin: 0;
+      font-size: clamp(32px, 7vw, 55px);
+      line-height: .98;
+      letter-spacing: -.045em;
+    }
+    .sub {
+      margin: 16px auto 4px;
+      max-width: 430px;
+      color: var(--muted);
+      font-size: clamp(16px, 2.6vw, 19px);
+      line-height: 1.5;
+    }
+    .egg-wrap { height: 245px; display: grid; place-items: center; }
+    .egg {
+      width: 156px;
+      height: 196px;
+      border: 0;
+      border-radius: 51% 49% 48% 52% / 62% 61% 39% 38%;
+      position: relative;
+      cursor: pointer;
+      background:
+        radial-gradient(circle at 36% 33%, #fff 0 5px, transparent 6px),
+        radial-gradient(circle at 67% 47%, #fff 0 7px, transparent 8px),
+        radial-gradient(circle at 42% 69%, #fff 0 6px, transparent 7px),
+        linear-gradient(140deg, #e63946 0 32%, #1a1a1a 33% 63%, #f7b8be 64%);
+      box-shadow: inset -16px -18px 28px rgba(26,26,26,.18), inset 13px 14px 18px rgba(255,255,255,.28), 0 18px 28px rgba(26,26,26,.20);
+      transition: transform .2s ease, filter .2s ease;
+      animation: bob 2.7s ease-in-out infinite;
+    }
+    .egg:hover { filter: saturate(1.12); transform: translateY(-5px) rotate(2deg) scale(1.03); }
+    .egg:focus-visible { outline: 5px solid white; box-shadow: 0 0 0 9px var(--red), 0 18px 28px rgba(26,26,26,.20); }
+    .egg::after {
+      content: "★";
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+      color: white;
+      font-size: 48px;
+      text-shadow: 0 3px 0 rgba(26,26,26,.22);
+    }
+    .egg.crack { animation: crack .58s ease; }
+    .action {
+      border: 0;
+      border-radius: 999px;
+      padding: 15px 24px;
+      background: var(--red);
+      color: white;
+      font: inherit;
+      font-size: 17px;
+      font-weight: 850;
+      cursor: pointer;
+      box-shadow: 0 8px 0 var(--ink);
+      transition: transform .15s ease, box-shadow .15s ease;
+    }
+    .action:hover { transform: translateY(-2px); background: var(--red-dark); box-shadow: 0 10px 0 var(--ink); }
+    .action:active { transform: translateY(5px); box-shadow: 0 3px 0 var(--ink); }
+    .fortune {
+      min-height: 66px;
+      margin: 27px auto 0;
+      max-width: 480px;
+      display: grid;
+      place-items: center;
+      font-size: clamp(18px, 3vw, 23px);
+      font-weight: 800;
+      line-height: 1.3;
+    }
+    .fortune.reveal { animation: pop .45s cubic-bezier(.2,.8,.3,1.25); }
+    footer { margin-top: 22px; color: var(--muted); font-size: 12px; font-weight: 700; }
+    .confetti i {
+      position: absolute;
+      left: var(--x);
+      top: -20px;
+      width: 10px;
+      height: 16px;
+      border-radius: 3px;
+      background: var(--c);
+      transform: rotate(var(--r));
+      animation: fall var(--d) cubic-bezier(.15,.6,.4,1) forwards;
+    }
+    @keyframes bob { 50% { transform: translateY(-10px) rotate(-1deg); } }
+    @keyframes float { 50% { transform: translateY(-12px) rotate(14deg); } }
+    @keyframes crack { 20% { transform: rotate(-9deg) scale(1.03); } 45% { transform: rotate(10deg) scale(.96); } 70% { transform: rotate(-5deg) scale(1.08); } }
+    @keyframes pop { from { opacity: 0; transform: translateY(14px) scale(.94); } to { opacity: 1; transform: none; } }
+    @keyframes fall { to { top: 108vh; transform: translateX(var(--drift)) rotate(720deg); } }
+    @media (max-height: 720px) {
+      .card { min-height: auto; padding-block: 25px; }
+      .egg-wrap { height: 180px; transform: scale(.78); margin-block: -10px; }
+      .fortune { margin-top: 20px; }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      *, *::before, *::after { animation-duration: .01ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+    }
+  </style>
+</head>
+<body>
+  <div class="sparkles" aria-hidden="true"><span>✦</span><span>✧</span><span>✿</span><span>✦</span></div>
+  <div class="confetti" id="confetti" aria-hidden="true"></div>
+  <main>
+    <section class="card" aria-labelledby="title">
+      <p class="eyebrow">A PrizePass intermission</p>
+      <h1 id="title">Crack your extremely important business fortune.</h1>
+      <p class="sub">This tool has no measurable ROI. That is what makes it powerful.</p>
+      <div class="egg-wrap">
+        <button class="egg" id="egg" aria-label="Crack the lucky egg"></button>
+      </div>
+      <button class="action" id="crack">Crack the egg</button>
+      <div class="fortune" id="fortune" role="status" aria-live="polite">Your destiny is sealed in a tiny digital egg.</div>
+      <footer>PrizePass-certified useless • Please return to the presentation</footer>
+    </section>
+  </main>
+  <script>
+    const fortunes = [
+      "Your next customer is already telling their group chat about you.",
+      "A suspiciously good idea will arrive at 2:17 a.m.",
+      "Your pitch will be so good someone asks for the link.",
+      "The Wi-Fi will work on the first try. Probably.",
+      "A five-minute task will actually take five minutes.",
+      "Your giveaway winner will check their notifications immediately.",
+      "Someone important is about to say, ‘Wait… that’s actually genius.’",
+      "You will remember why you walked into the room.",
+      "Today’s lucky metric: vibes, up 37%.",
+      "A tiny idea is about to become a very real business move."
+    ];
+    const egg = document.querySelector('#egg');
+    const button = document.querySelector('#crack');
+    const output = document.querySelector('#fortune');
+    const confetti = document.querySelector('#confetti');
+    let previous = -1;
+
+    function celebrate() {
+      let pick;
+      do pick = Math.floor(Math.random() * fortunes.length); while (pick === previous);
+      previous = pick;
+      egg.classList.remove('crack');
+      output.classList.remove('reveal');
+      void egg.offsetWidth;
+      egg.classList.add('crack');
+      output.textContent = fortunes[pick];
+      output.classList.add('reveal');
+      button.textContent = 'Crack another';
+      confetti.replaceChildren();
+      const colors = ['#e63946', '#1a1a1a', '#f7b8be', '#e0dddb', '#ffffff'];
+      for (let n = 0; n < 54; n++) {
+        const piece = document.createElement('i');
+        piece.style.setProperty('--x', `${Math.random() * 100}%`);
+        piece.style.setProperty('--c', colors[n % colors.length]);
+        piece.style.setProperty('--r', `${Math.random() * 180}deg`);
+        piece.style.setProperty('--d', `${1.8 + Math.random() * 1.7}s`);
+        piece.style.setProperty('--drift', `${-90 + Math.random() * 180}px`);
+        piece.style.animationDelay = `${Math.random() * .25}s`;
+        confetti.append(piece);
+      }
+      setTimeout(() => confetti.replaceChildren(), 3800);
+    }
+    egg.addEventListener('click', celebrate);
+    button.addEventListener('click', celebrate);
+  </script>
+</body>
+</html>
